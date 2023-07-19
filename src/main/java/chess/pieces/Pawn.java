@@ -5,8 +5,6 @@ import java.util.*;
 public class Pawn {
 
     private String color;
-    public static String white = "white";
-    public static String black = "black";
 
     public Pawn(String color) {
         this.color = color;
@@ -23,4 +21,12 @@ public class Pawn {
     public String getColor() {
         return this.color;
     }
+
+    public String getRepresentation() {
+        if(this.color.equals("black")) {
+            return "P";
+        }
+        return "p";
+    }
+
 }
