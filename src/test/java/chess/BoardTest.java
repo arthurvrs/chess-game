@@ -1,11 +1,9 @@
 package chess;
 
-import chess.pieces.Pawn;
-
+import chess.pieces.Piece;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import util.StringUtil;
 
 /**
  * Classe de testes para o tabuleiro.
@@ -15,14 +13,24 @@ public class BoardTest extends TestCase {
     private Board board;
 
     public BoardTest() {
+        Piece.resetCOUNT();
         board = new Board();
     }
 
     @Test
-    public void testCreateBoard() {
+    public void testCreate() {
         board.initialize();
-        assertEquals(16, board.getNumberOfPieces());
-        System.out.println(board.toString());
+        assertEquals(32, board.getNumberOfPieces());
+        System.out.println(board.print());
+        String blankRank = StringUtil.appendNewLine("........");
+        assertEquals(
+                StringUtil.appendNewLine("RNBQKBNR") +
+                        StringUtil.appendNewLine("PPPPPPPP") +
+                        blankRank + blankRank + blankRank + blankRank +
+                        StringUtil.appendNewLine("pppppppp") +
+                        StringUtil.appendNewLine("rnbqkbnr"),
+                        board.print()
+        );
     }
 
     /**
@@ -31,8 +39,8 @@ public class BoardTest extends TestCase {
      */
     /*@Test
     public void testAddPawn() {
-        Pawn pawn1 = new Pawn();
-        Pawn pawn2 = new Pawn("black");
+        Piece pawn1 = new Piece();
+        Piece pawn2 = new Piece("black");
 
         board.addPawn(pawn1);
         assertEquals(1, board.getNumberOfPieces());

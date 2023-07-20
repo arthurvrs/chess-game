@@ -2,7 +2,7 @@ package chess;
 
 public class Character {
 
-    static String NEWLINE = "\n";
+    /*static String NEWLINE = "\n";
     public boolean isWhitespace(char character) {
         if(character == '\n' || character == '\t' || character == '\b') {
             return true;
@@ -12,5 +12,5 @@ public class Character {
 
     public String getNEWLINE() {
         return NEWLINE;
-    }
+    }*/
 }

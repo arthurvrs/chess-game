@@ -1,16 +1,15 @@
 package chess;
 
-import chess.pieces.Pawn;
+import chess.pieces.Piece;
+import util.StringUtil;
 
 import java.util.ArrayList;
 
 public class Board {
 
     private String[][] board;
-    private ArrayList<Pawn> whitePawns;
-    private ArrayList<Pawn> blackPawns;
-
-    private Character character;
+    private ArrayList<Piece> whitePieces;
+    private ArrayList<Piece> blackPieces;
 
     public Board() {
         board = new String[8][8];
@@ -19,31 +18,48 @@ public class Board {
                 board[i][j] = ".";
             }
         }
-        this.whitePawns = new ArrayList<Pawn>();
-        for(int i = 0; i < 8; i++) {
-            whitePawns.add(new Pawn("white"));
-        }
-        this.blackPawns = new ArrayList<Pawn>();
-        for(int i = 0; i < 8; i++) {
-            blackPawns.add(new Pawn("black"));
-        }
-
-        character = new Character();
+        this.blackPieces = createPieces("black");
+        this.whitePieces = createPieces("white");
     }
 
-    /*private void addPiece(ArrayList<> piecesType, String color, int numberOfPieces) {
-        for(int i = 0; i < numberOfPieces; i++) {
-            piecesType.add(new (piecesType.getClass())(color));
+    private ArrayList<Piece> createPieces(String color) {
+        ArrayList<Piece> pieces = new ArrayList<>();
+        if(color.equals("white")) {
+            addPawn(pieces, color);
         }
-    }*/
+        pieces.add(Piece.create(color, "rook"));
+        pieces.add(Piece.create(color, "nightsK"));
+        pieces.add(Piece.create(color, "bishop"));
+        pieces.add(Piece.create(color, "queen"));
+        pieces.add(Piece.create(color, "king"));
+        pieces.add(Piece.create(color, "bishop"));
+        pieces.add(Piece.create(color, "nightsK"));
+        pieces.add(Piece.create(color, "rook"));
+        if(color.equals("black")) {
+            addPawn(pieces, color);
+        }
+
+        return pieces;
+    }
+
+    private void addPawn(ArrayList<Piece> pieces, String color) {
+        for(int i = 0; i < 8; i++) {
+            pieces.add(Piece.create(color, "pawn"));
+        }
+    }
 
     public void initialize() {
-        for(int i = 0; i < 8; i++) {
-            board[1][i] = whitePawns.get(i).getRepresentation();
-        }
+        setPiecesInLines(board, blackPieces, 0, 1);
+        setPiecesInLines(board, whitePieces, 6, 7);
+    }
 
-        for(int i = 0; i < 8; i++) {
-            board[6][i] = blackPawns.get(i).getRepresentation();
+    private void setPiecesInLines(String[][] board, ArrayList<Piece> pieces, int firstColumn, int secondColumn) {
+        int aux = 0;
+        for(int i = firstColumn; i <= secondColumn; i++) {
+            for(int j = 0; j < 8; j++) {
+                board[i][j] = pieces.get(j + aux).getRepresentation();
+            }
+            aux = 8;
         }
     }
 
@@ -51,37 +67,23 @@ public class Board {
         return board;
     }
 
-    public String toString() {
-        String boardPrintable = "";
+    public String print() {
+        StringBuilder boardPrintable = new StringBuilder();
 
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
-                boardPrintable += board[i][j];
+                boardPrintable.append(board[i][j]);
             }
-            boardPrintable += character.getNEWLINE();
+            boardPrintable.append(StringUtil.getNEWLINE());
         }
-        return boardPrintable;
+        return boardPrintable.toString();
     }
 
-    /*public void addPawn(Pawn pawn) {
-        pawns.add(pawn);
-    }*/
-
-    /*public Pawn getPawn(int index) {
+    /*public Piece getPawn(int index) {
         return pawns.get(index);
     }*/
 
     public int getNumberOfPieces() {
-        int numberOfPieces = 0;
-
-        for(int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {
-                if(!board[i][j].equals(".")) {
-                    numberOfPieces++;
-                }
-            }
-        }
-
-        return numberOfPieces;
+        return Piece.COUNT;
     }
 }
