@@ -1,10 +1,9 @@
 package util;
 
+import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class StringUtilTest {
+public class StringUtilTest extends TestCase {
 
     @Test
     public void testNewLine() {

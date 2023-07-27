@@ -1,70 +1,186 @@
 package chess;
 
 import chess.pieces.Piece;
-import util.StringUtil;
+import util.*;
 
 import java.util.ArrayList;
 
 public class Board {
 
-    private String[][] board;
-    private ArrayList<Piece> whitePieces;
-    private ArrayList<Piece> blackPieces;
+    private final Piece[][] board;
+    private ArrayList<Piece> defaultBlackPieces;
+    private ArrayList<Piece> orderedBlackPieces;
+    private ArrayList<Piece> defaultWhitePieces;
+    private ArrayList<Piece> orderedWhitePieces;
 
     public Board() {
-        board = new String[8][8];
+        board = new Piece[8][8];
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
-                board[i][j] = ".";
+                board[i][j] = Piece.noPiece();
             }
         }
-        this.blackPieces = createPieces("black");
-        this.whitePieces = createPieces("white");
+        this.defaultBlackPieces = new ArrayList<>();
+        this.orderedBlackPieces = new ArrayList<>();
+
+        this.defaultWhitePieces = new ArrayList<>();
+        this.orderedWhitePieces = new ArrayList<>();
     }
 
-    private ArrayList<Piece> createPieces(String color) {
-        ArrayList<Piece> pieces = new ArrayList<>();
-        if(color.equals("white")) {
-            addPawn(pieces, color);
-        }
-        pieces.add(Piece.create(color, "rook"));
-        pieces.add(Piece.create(color, "nightsK"));
-        pieces.add(Piece.create(color, "bishop"));
-        pieces.add(Piece.create(color, "queen"));
-        pieces.add(Piece.create(color, "king"));
-        pieces.add(Piece.create(color, "bishop"));
-        pieces.add(Piece.create(color, "nightsK"));
-        pieces.add(Piece.create(color, "rook"));
-        if(color.equals("black")) {
-            addPawn(pieces, color);
+    private void createPieces(Piece.Color color) {
+        if(color == Piece.Color.white) {
+            addWhitePawns();
+            addWhitePieces(Piece.ROOK_REPRESENTATION);
+            addWhitePieces(Piece.KNIGHT_REPRESENTATION);
+            addWhitePieces(Piece.BISHOP_REPRESENTATION);
+            addWhitePieces(Piece.QUEEN_REPRESENTATION);
+            addWhitePieces(Piece.KING_REPRESENTATION);
+            addWhitePieces(Piece.BISHOP_REPRESENTATION);
+            addWhitePieces(Piece.KNIGHT_REPRESENTATION);
+            addWhitePieces(Piece.ROOK_REPRESENTATION);
         }
 
-        return pieces;
+        if(color == Piece.Color.black) {
+            addBlackPieces(Piece.ROOK_REPRESENTATION);
+            addBlackPieces(Piece.KNIGHT_REPRESENTATION);
+            addBlackPieces(Piece.BISHOP_REPRESENTATION);
+            addBlackPieces(Piece.QUEEN_REPRESENTATION);
+            addBlackPieces(Piece.KING_REPRESENTATION);
+            addBlackPieces(Piece.BISHOP_REPRESENTATION);
+            addBlackPieces(Piece.KNIGHT_REPRESENTATION);
+            addBlackPieces(Piece.ROOK_REPRESENTATION);
+            addBlackPawns();
+        }
     }
 
-    private void addPawn(ArrayList<Piece> pieces, String color) {
+    private void addBlackPieces(char representation) {
+        defaultBlackPieces.add(Piece.createBlackPiece(representation));
+        orderedBlackPieces.add(Piece.createBlackPiece(representation));
+        orderStrength(orderedBlackPieces);
+    }
+
+    private void addBlackPawns() {
         for(int i = 0; i < 8; i++) {
-            pieces.add(Piece.create(color, "pawn"));
+            addBlackPieces(Piece.PAWN_REPRESENTATION);
+        }
+    }
+
+    private void addWhitePieces(char representation) {
+        defaultWhitePieces.add(Piece.createWhitePiece(representation));
+        orderedWhitePieces.add(Piece.createWhitePiece(representation));
+        orderStrength(orderedWhitePieces);
+    }
+
+    private void addWhitePawns() {
+        for(int i = 0; i < 8; i++) {
+            addWhitePieces(Piece.PAWN_REPRESENTATION);
         }
     }
 
     public void initialize() {
-        setPiecesInLines(board, blackPieces, 0, 1);
-        setPiecesInLines(board, whitePieces, 6, 7);
+        createPieces(Piece.Color.black);
+        createPieces(Piece.Color.white);
+        setPiecesInLines(board, defaultBlackPieces, 0, 1);
+        setPiecesInLines(board, defaultWhitePieces, 6, 7);
     }
 
-    private void setPiecesInLines(String[][] board, ArrayList<Piece> pieces, int firstColumn, int secondColumn) {
+    private void orderStrength(ArrayList<Piece> pieces) {
+        int aux = pieces.size() - 1;
+        Piece piece;
+        for(int i = pieces.size() - 2; i >= 0; i--) {
+            if(pieces.get(aux).getStrengh() > pieces.get(i).getStrengh()) {
+                    piece = pieces.get(i);
+                    pieces.set(i, pieces.get(aux));
+                    pieces.set(aux, piece);
+            }
+            aux--;
+        }
+    }
+
+    public String getOrderStrength(Piece.Color color) {
+        StringBuilder list = new StringBuilder();
+        if(color == Piece.Color.black) {
+            for(int i = 0; i < orderedBlackPieces.size(); i++) {
+                list.append(orderedBlackPieces.get(i).getRepresentation());
+                list.append("\n");
+            }
+        } else {
+            for(int i = 0; i < orderedWhitePieces.size(); i++) {
+                list.append(orderedWhitePieces.get(i).getRepresentation());
+                list.append(StringUtil.getNEWLINE());
+            }
+        }
+        return list.toString();
+    }
+
+    private void setPiecesInLines(Piece[][] board, ArrayList<Piece> pieces, int firstColumn, int secondColumn) {
         int aux = 0;
         for(int i = firstColumn; i <= secondColumn; i++) {
             for(int j = 0; j < 8; j++) {
-                board[i][j] = pieces.get(j + aux).getRepresentation();
+                board[i][j] = pieces.get(j + aux);
             }
             aux = 8;
         }
     }
 
-    public String[][] getBoard() {
+    public Piece[][] getBoard() {
         return board;
+    }
+
+    public int getNumberOfPieces() {
+        int count = 0;
+        for(int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                if(board[i][j].getRepresentation() != '.') {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public int getNumberOfSpecificsPieces(char representation) {
+        int count = 0;
+        for(int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                if(board[i][j].getRepresentation() == representation) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public char getPieceAtLocation(String location) {
+        int [] aux = getRightLocation(location);
+        return board[aux[0]][aux[1]].getRepresentation();
+    }
+
+    private int[] getRightLocation(String location) {
+        int [] aux = util.Character.getLocation(location);
+        int rank = aux[0];
+        int files = aux[1];
+        return aux;
+    }
+
+    public void setPieceAtLocation(Piece.Color color, char representation, String location) {
+        if(color == Piece.Color.black) {
+            this.defaultBlackPieces.add(Piece.createBlackPiece(representation));
+            this.orderedBlackPieces.add(Piece.createBlackPiece(representation));
+            orderStrength(orderedBlackPieces);
+            int [] aux = getRightLocation(location);
+            board[aux[0]][aux[1]] =
+                    this.defaultBlackPieces.
+                    get(this.defaultBlackPieces.size()-1);
+        } else {
+            this.defaultWhitePieces.add(Piece.createWhitePiece(representation));
+            this.orderedWhitePieces.add(Piece.createWhitePiece(representation));
+            orderStrength(orderedWhitePieces);
+            int [] aux = getRightLocation(location);
+            board[aux[0]][aux[1]] =
+                    this.defaultWhitePieces.
+                    get(this.defaultWhitePieces.size()-1);
+        }
     }
 
     public String print() {
@@ -72,18 +188,51 @@ public class Board {
 
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
-                boardPrintable.append(board[i][j]);
+                boardPrintable.append(board[i][j].getRepresentation());
             }
             boardPrintable.append(StringUtil.getNEWLINE());
         }
         return boardPrintable.toString();
     }
 
-    /*public Piece getPawn(int index) {
-        return pawns.get(index);
-    }*/
-
-    public int getNumberOfPieces() {
-        return Piece.COUNT;
+    public double getPiecesStrength(Piece.Color color) {
+        double strength;
+        if(color == Piece.Color.black) {
+            strength = getStrength(color);
+        } else {
+            strength = getStrength(color);
+        }
+        return strength;
     }
+
+    private double getStrength(Piece.Color color) {
+        double strengh = 0;
+        for(int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                if(board[i][j].getColor() == color) {
+                    if(board[i][j].getType() == Piece.Type.PAWN) {
+                        searchPawnInFile(i, j);
+                    }
+                    strengh += board[i][j].getStrengh();
+                }
+            }
+        }
+        return strengh;
+    }
+
+    /**
+     * Checar futuramente para ver se não está dando problema no depricatePawn() com um IndexOutOfBoundsException na matriz.
+     * @param rankIndex
+     * @param fileIndex
+     */
+    private void searchPawnInFile(int rankIndex, int fileIndex) {
+        for(int i = rankIndex + 1; i < 8; i++) {
+            if(board[rankIndex][fileIndex].getType() == board[i][fileIndex].getType()) {
+                board[rankIndex][fileIndex].depricatePawn();
+                board[i][fileIndex].depricatePawn();
+                break;
+            }
+        }
+    }
+
 }

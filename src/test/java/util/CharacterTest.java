@@ -1,13 +1,9 @@
-package chess;
+package util;
 
 import junit.framework.TestCase;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class CharacterTest extends TestCase {
 
-    @Test
     public void testWhitespace() {
         Character character = new Character();
         char newLine = '\n';
@@ -17,5 +13,11 @@ public class CharacterTest extends TestCase {
         /*assertEquals(true, character.isWhitespace(newLine));
         assertEquals(true, character.isWhitespace(tab));
         assertEquals(true, character.isWhitespace(backspace));*/
+    }
+
+    public void testGetLocation() {
+        int [] aux =  Character.getLocation("e1");
+        assertEquals(7, aux[0]);
+        assertEquals(4, aux[1]);
     }
 }
