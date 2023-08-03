@@ -12,7 +12,7 @@ public class AllTests {
         suite.addTestSuite(BoardTest.class);
         suite.addTestSuite(CharacterTest.class);
         suite.addTestSuite(StringUtilTest.class);
-
+        suite.addTestSuite(GameTest.class);
         return suite;
     }
 }

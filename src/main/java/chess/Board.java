@@ -30,50 +30,50 @@ public class Board {
     private void createPieces(Piece.Color color) {
         if(color == Piece.Color.white) {
             addWhitePawns();
-            addWhitePieces(Piece.ROOK_REPRESENTATION);
-            addWhitePieces(Piece.KNIGHT_REPRESENTATION);
-            addWhitePieces(Piece.BISHOP_REPRESENTATION);
-            addWhitePieces(Piece.QUEEN_REPRESENTATION);
-            addWhitePieces(Piece.KING_REPRESENTATION);
-            addWhitePieces(Piece.BISHOP_REPRESENTATION);
-            addWhitePieces(Piece.KNIGHT_REPRESENTATION);
-            addWhitePieces(Piece.ROOK_REPRESENTATION);
+            addWhitePieces(Piece.Type.ROOK);
+            addWhitePieces(Piece.Type.KNIGHT);
+            addWhitePieces(Piece.Type.BISHOP);
+            addWhitePieces(Piece.Type.QUEEN);
+            addWhitePieces(Piece.Type.KING);
+            addWhitePieces(Piece.Type.BISHOP);
+            addWhitePieces(Piece.Type.KNIGHT);
+            addWhitePieces(Piece.Type.ROOK);
         }
 
         if(color == Piece.Color.black) {
-            addBlackPieces(Piece.ROOK_REPRESENTATION);
-            addBlackPieces(Piece.KNIGHT_REPRESENTATION);
-            addBlackPieces(Piece.BISHOP_REPRESENTATION);
-            addBlackPieces(Piece.QUEEN_REPRESENTATION);
-            addBlackPieces(Piece.KING_REPRESENTATION);
-            addBlackPieces(Piece.BISHOP_REPRESENTATION);
-            addBlackPieces(Piece.KNIGHT_REPRESENTATION);
-            addBlackPieces(Piece.ROOK_REPRESENTATION);
+            addBlackPieces(Piece.Type.ROOK);
+            addBlackPieces(Piece.Type.KNIGHT);
+            addBlackPieces(Piece.Type.BISHOP);
+            addBlackPieces(Piece.Type.QUEEN);
+            addBlackPieces(Piece.Type.KING);
+            addBlackPieces(Piece.Type.BISHOP);
+            addBlackPieces(Piece.Type.KNIGHT);
+            addBlackPieces(Piece.Type.ROOK);
             addBlackPawns();
         }
     }
 
-    private void addBlackPieces(char representation) {
-        defaultBlackPieces.add(Piece.createBlackPiece(representation));
-        orderedBlackPieces.add(Piece.createBlackPiece(representation));
-        orderStrength(orderedBlackPieces);
-    }
-
-    private void addBlackPawns() {
-        for(int i = 0; i < 8; i++) {
-            addBlackPieces(Piece.PAWN_REPRESENTATION);
-        }
-    }
-
-    private void addWhitePieces(char representation) {
-        defaultWhitePieces.add(Piece.createWhitePiece(representation));
-        orderedWhitePieces.add(Piece.createWhitePiece(representation));
+    private void addWhitePieces(Piece.Type type) {
+        defaultWhitePieces.add(Piece.createWhitePiece(type));
+        orderedWhitePieces.add(Piece.createWhitePiece(type));
         orderStrength(orderedWhitePieces);
     }
 
     private void addWhitePawns() {
         for(int i = 0; i < 8; i++) {
-            addWhitePieces(Piece.PAWN_REPRESENTATION);
+            addWhitePieces(Piece.Type.PAWN);
+        }
+    }
+
+    private void addBlackPieces(Piece.Type type) {
+        defaultBlackPieces.add(Piece.createBlackPiece(type));
+        orderedBlackPieces.add(Piece.createBlackPiece(type));
+        orderStrength(orderedBlackPieces);
+    }
+
+    private void addBlackPawns() {
+        for(int i = 0; i < 8; i++) {
+            addBlackPieces(Piece.Type.PAWN);
         }
     }
 
@@ -88,7 +88,7 @@ public class Board {
         int aux = pieces.size() - 1;
         Piece piece;
         for(int i = pieces.size() - 2; i >= 0; i--) {
-            if(pieces.get(aux).getStrengh() > pieces.get(i).getStrengh()) {
+            if(pieces.get(aux).getStrength() > pieces.get(i).getStrength()) {
                     piece = pieces.get(i);
                     pieces.set(i, pieces.get(aux));
                     pieces.set(aux, piece);
@@ -100,13 +100,13 @@ public class Board {
     public String getOrderStrength(Piece.Color color) {
         StringBuilder list = new StringBuilder();
         if(color == Piece.Color.black) {
-            for(int i = 0; i < orderedBlackPieces.size(); i++) {
-                list.append(orderedBlackPieces.get(i).getRepresentation());
+            for (Piece orderedBlackPiece : orderedBlackPieces) {
+                list.append(orderedBlackPiece.getRepresentation());
                 list.append("\n");
             }
         } else {
-            for(int i = 0; i < orderedWhitePieces.size(); i++) {
-                list.append(orderedWhitePieces.get(i).getRepresentation());
+            for (Piece orderedWhitePiece : orderedWhitePieces) {
+                list.append(orderedWhitePiece.getRepresentation());
                 list.append(StringUtil.getNEWLINE());
             }
         }
@@ -157,24 +157,21 @@ public class Board {
     }
 
     private int[] getRightLocation(String location) {
-        int [] aux = util.Character.getLocation(location);
-        int rank = aux[0];
-        int files = aux[1];
-        return aux;
+        return util.Character.getLocation(location);
     }
 
-    public void setPieceAtLocation(Piece.Color color, char representation, String location) {
+    public void setPieceAtLocation(Piece.Color color, Piece.Type type, String location) {
         if(color == Piece.Color.black) {
-            this.defaultBlackPieces.add(Piece.createBlackPiece(representation));
-            this.orderedBlackPieces.add(Piece.createBlackPiece(representation));
+            this.defaultBlackPieces.add(Piece.createBlackPiece(type));
+            this.orderedBlackPieces.add(Piece.createBlackPiece(type));
             orderStrength(orderedBlackPieces);
             int [] aux = getRightLocation(location);
             board[aux[0]][aux[1]] =
                     this.defaultBlackPieces.
                     get(this.defaultBlackPieces.size()-1);
         } else {
-            this.defaultWhitePieces.add(Piece.createWhitePiece(representation));
-            this.orderedWhitePieces.add(Piece.createWhitePiece(representation));
+            this.defaultWhitePieces.add(Piece.createWhitePiece(type));
+            this.orderedWhitePieces.add(Piece.createWhitePiece(type));
             orderStrength(orderedWhitePieces);
             int [] aux = getRightLocation(location);
             board[aux[0]][aux[1]] =
@@ -196,42 +193,72 @@ public class Board {
     }
 
     public double getPiecesStrength(Piece.Color color) {
-        double strength;
-        if(color == Piece.Color.black) {
-            strength = getStrength(color);
-        } else {
-            strength = getStrength(color);
+        return getStrength(color);
+    }
+
+    private double getStrength(Piece.Color color) {
+        double strength = 0;
+        for(int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                if(board[i][j].getColor() == color) {
+                    if(board[i][j].getType() == Piece.Type.PAWN && searchPawnInFile(i, j)) {
+                        strength -= 1;
+                    }
+                    strength += board[i][j].getStrength();
+                }
+            }
         }
         return strength;
     }
 
-    private double getStrength(Piece.Color color) {
-        double strengh = 0;
+    private boolean searchPawnInFile(int rankIndex, int fileIndex) {
+        for(int i = rankIndex + 1; i < 8; i++) {
+            if(board[rankIndex][fileIndex].getType() == board[i][fileIndex].getType()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int[] getPieceLocation(char representation) {
+        int[] aux = new int[2];
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
-                if(board[i][j].getColor() == color) {
-                    if(board[i][j].getType() == Piece.Type.PAWN) {
-                        searchPawnInFile(i, j);
-                    }
-                    strengh += board[i][j].getStrengh();
+                if(board[i][j].getRepresentation() == representation) {
+                    aux[0] = i;
+                    aux[1] = j;
+                    return aux;
                 }
             }
         }
-        return strengh;
+        return aux;
     }
 
-    /**
-     * Checar futuramente para ver se não está dando problema no depricatePawn() com um IndexOutOfBoundsException na matriz.
-     * @param rankIndex
-     * @param fileIndex
-     */
-    private void searchPawnInFile(int rankIndex, int fileIndex) {
-        for(int i = rankIndex + 1; i < 8; i++) {
-            if(board[rankIndex][fileIndex].getType() == board[i][fileIndex].getType()) {
-                board[rankIndex][fileIndex].depricatePawn();
-                board[i][fileIndex].depricatePawn();
+    public void moveKing(Piece.Color color, String direction) {
+        int[] aux = new int[2];
+        if(color == Piece.Color.black) {
+            aux = getPieceLocation('K');
+        } else if(color == Piece.Color.white) {
+            aux = getPieceLocation('k');
+        }
+        Piece auxPiece = Piece.noPiece();
+        switch (direction) {
+            case "up":
+                board[aux[0] - 1][aux[1]] = board[aux[0]][aux[1]];
+                board[aux[0]][aux[1]] = auxPiece;
                 break;
-            }
+            case "left":
+                board[aux[0]][aux[1] - 1] = board[aux[0]][aux[1]];
+                board[aux[0]][aux[1]] = auxPiece;
+                break;
+            case "down":
+                board[aux[0] + 1][aux[1]] = board[aux[0]][aux[1]];
+                board[aux[0]][aux[1]] = auxPiece;
+                break;
+            case "right":
+                board[aux[0]][aux[1] + 1] = board[aux[0]][aux[1]];
+                board[aux[0]][aux[1]] = auxPiece;
+                break;
         }
     }
 

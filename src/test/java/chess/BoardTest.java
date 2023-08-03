@@ -70,22 +70,22 @@ public class BoardTest extends TestCase {
     }
 
     private void setPieces() {
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.KING_REPRESENTATION, "b8");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.ROOK_REPRESENTATION, "c8");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.PAWN_REPRESENTATION, "a7");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.PAWN_REPRESENTATION, "c7");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.BISHOP_REPRESENTATION, "d7");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.PAWN_REPRESENTATION, "b6");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.QUEEN_REPRESENTATION, "e6");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.KING, "b8");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.ROOK, "c8");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.PAWN, "a7");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.PAWN, "c7");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.BISHOP, "d7");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.PAWN, "b6");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.QUEEN, "e6");
 
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.KNIGHT_REPRESENTATION, "f4");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.QUEEN_REPRESENTATION, "g4");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.PAWN_REPRESENTATION, "f3");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.PAWN_REPRESENTATION, "h3");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.PAWN_REPRESENTATION, "f2");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.PAWN_REPRESENTATION, "g2");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.ROOK_REPRESENTATION, "e1");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.KING_REPRESENTATION, "f1");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.KNIGHT, "f4");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.QUEEN, "g4");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.PAWN, "f3");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.PAWN, "h3");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.PAWN, "f2");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.PAWN, "g2");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.ROOK, "e1");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.KING, "f1");
     }
 
     public void testGetPiecesStrength() {
@@ -104,4 +104,32 @@ public class BoardTest extends TestCase {
 
     }
 
+    public void testMove() {
+        setPieces();
+        emptyBoard.moveKing(Piece.Color.black, "left");
+        String blankRank = StringUtil.appendNewLine("........");
+        assertEquals(
+                StringUtil.appendNewLine("K.R.....") +
+                        StringUtil.appendNewLine("P.PB....") +
+                        StringUtil.appendNewLine(".P..Q...") +
+                        blankRank +
+                        StringUtil.appendNewLine(".....nq.") +
+                        StringUtil.appendNewLine(".....p.p") +
+                        StringUtil.appendNewLine(".....pp.") +
+                        StringUtil.appendNewLine("....rk.."),
+                emptyBoard.print()
+        );
+        emptyBoard.moveKing(Piece.Color.black, "right");
+    }
+
+    public void testGetPieceLocation() {
+        setPieces();
+        int[] aux = new int[2];
+        aux[0] = 4;
+        aux[1] = 5;
+        int[] location;
+        location = emptyBoard.getPieceLocation('n');
+        assertEquals(aux[0], location[0]);
+        assertEquals(aux[1], location[1]);
+    }
 }

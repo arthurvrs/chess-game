@@ -1,64 +1,71 @@
 package chess.pieces;
 
+import java.util.*;
+
+import static java.lang.Character.toUpperCase;
+
 public class Piece {
 
     private final Color color;
     public enum Color {black, white, blank}
-    private double strengh;
-    private final char representation;
-    public enum Type {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING, NO_PIECE}
-    public static char PAWN_REPRESENTATION = 'p';
-    public static char ROOK_REPRESENTATION = 'r';
-    public static char KNIGHT_REPRESENTATION = 'n';
-    public static char BISHOP_REPRESENTATION = 'b';
-    public static char QUEEN_REPRESENTATION = 'q';
-    public static char KING_REPRESENTATION = 'k';
-
-    private Piece(Color color, char representation) {
-        if(color == Color.black) {
-            this.color = Color.black;
-            this.representation = Character.toUpperCase(representation);
-        } else if (color == Color.white){
-            this.color = Color.white;
-            this.representation = representation;
-        } else {
-            this.color = Color.blank;
+    private Map<Piece.Type, Double> strengthMap;
+    //private final char representation;
+    public enum Type {
+        PAWN('p'),
+        ROOK('r'),
+        KNIGHT('n'),
+        BISHOP('b'),
+        QUEEN('q'),
+        KING('k'),
+        NO_PIECE('.');
+        private final char representation;
+        Type(char representation) {
             this.representation = representation;
         }
-        setStrengh();
+        char getRepresentation() {
+            return representation;
+        }
+    }
+
+    private final Type type;
+
+    private Piece(Color color, Type type) {
+        if(color == Color.black) {
+            this.color = Color.black;
+            this.type = type;
+        } else if (color == Color.white){
+            this.color = Color.white;
+            this.type = type;
+        } else {
+            this.color = Color.blank;
+            this.type = type;
+        }
     }
 
     public static Piece noPiece() {
-        return new Piece(null, '.');
+        return new Piece(null, Type.NO_PIECE);
     }
 
-    public static Piece createBlackPiece(char REPRESENTATION) {
-        return new Piece(Color.black, REPRESENTATION);
+    public static Piece createBlackPiece(Type type) {
+        return new Piece(Color.black, type);
     }
 
-    public static Piece createWhitePiece(char REPRESENTATION) {
-        return new Piece(Color.white, REPRESENTATION);
+    public static Piece createWhitePiece(Type type) {
+        return new Piece(Color.white, type);
     }
 
     public Type getType() {
-        char auxRepresentation = Character.toLowerCase(representation);
-        return switch (auxRepresentation) {
-            case 'p' -> Type.PAWN;
-            case 'r' -> Type.ROOK;
-            case 'n' -> Type.KNIGHT;
-            case 'b' -> Type.BISHOP;
-            case 'q' -> Type.QUEEN;
-            case 'k' -> Type.KING;
-            default -> Type.NO_PIECE;
-        };
+        return type;
     }
 
     public Color getColor() {
-        return this.color;
+        return color;
     }
 
     public char getRepresentation() {
-        return representation;
+        if (color == Color.black)
+            return toUpperCase(getType().getRepresentation());
+        return getType().getRepresentation();
     }
 
     public boolean isBlack() {
@@ -69,32 +76,25 @@ public class Piece {
         return color == Color.white;
     }
 
-    private void setStrengh() {
-        char auxRepresentation = Character.toLowerCase(representation);
-        switch(auxRepresentation) {
-            case 'p':
-                this.strengh = 1;
-                break;
-            case 'n':
-                this.strengh = 2.5;
-                break;
-            case 'b':
-                this.strengh = 3;
-                break;
-            case 'r':
-                this.strengh = 5;
-                break;
-            case 'q':
-                this.strengh = 9;
-                break;
+    public double getStrength() {
+        return getStrengths().get(this.getType());
+    }
+
+    private Map<Type, Double> getStrengths() {
+        if(strengthMap == null) {
+            loadStrengths();
         }
+        return strengthMap;
     }
 
-    public void depricatePawn() {
-        this.strengh -= 0.5;
+    private void loadStrengths() {
+        strengthMap = new EnumMap<>(Piece.Type.class);
+        strengthMap.put(Type.NO_PIECE, 0.0);
+        strengthMap.put(Type.KING, 0.0);
+        strengthMap.put(Type.PAWN, 1.0);
+        strengthMap.put(Type.KNIGHT, 2.5);
+        strengthMap.put(Type.BISHOP, 3.0);
+        strengthMap.put(Type.ROOK, 5.0);
+        strengthMap.put(Type.QUEEN, 9.0);
     }
-    public double getStrengh() {
-        return this.strengh;
-    }
-
 }
