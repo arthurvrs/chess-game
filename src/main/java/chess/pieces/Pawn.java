@@ -15,4 +15,19 @@ public class Pawn extends Piece {
         strength -= 0.5;
     }
 
+    @Override
+    public boolean getPossibleMoves(Movement movement) {
+        return
+                movement == Movement.up ||
+                movement == Movement.upLeft ||
+                movement == Movement.upRight ||
+                movement == Movement.down ||
+                movement == Movement.downLeft ||
+                movement == Movement.downRight;
+    }
+
+    @Override
+    public int getNumberOfMoves() {
+        return 2;
+    }
 }

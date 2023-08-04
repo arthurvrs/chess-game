@@ -10,6 +10,12 @@ public abstract class Piece {
     protected final Color color;
     protected char representation;
     protected double strength;
+    public enum Movement {
+        up, left, down, right,
+        upLeft, upRight, downLeft, downRight,
+        upUpLeft, leftLeftUp, leftLeftDown, downDownLeft,
+        downDownRight, rightRightDown, rightRightUp, upUpRight
+    }
 
     protected Piece(Color color, char representation) {
         this.color = color;
@@ -42,4 +48,8 @@ public abstract class Piece {
     public double getStrength() {
         return strength;
     }
+
+    public abstract boolean getPossibleMoves(Movement movement);
+
+    public abstract int getNumberOfMoves();
 }

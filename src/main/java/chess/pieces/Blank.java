@@ -11,4 +11,13 @@ public class Blank extends Piece {
         return new Blank();
     }
 
+    @Override
+    public boolean getPossibleMoves(Movement movement) {
+        return false;
+    }
+
+    @Override
+    public int getNumberOfMoves() {
+        return 0;
+    }
 }

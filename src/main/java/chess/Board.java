@@ -8,10 +8,10 @@ import java.util.ArrayList;
 public class Board {
 
     private final Piece[][] board;
-    private ArrayList<Piece> defaultBlackPieces;
-    private ArrayList<Piece> orderedBlackPieces;
-    private ArrayList<Piece> defaultWhitePieces;
-    private ArrayList<Piece> orderedWhitePieces;
+    private final ArrayList<Piece> defaultWhitePieces;
+    private final ArrayList<Piece> orderedWhitePieces;
+    private final ArrayList<Piece> defaultBlackPieces;
+    private final ArrayList<Piece> orderedBlackPieces;
 
     public Board() {
         board = new Piece[8][8];
@@ -20,20 +20,30 @@ public class Board {
                 board[i][j] = Blank.createPiece();
             }
         }
+        this.defaultWhitePieces = new ArrayList<>();
+        this.orderedWhitePieces = new ArrayList<>();
+
         this.defaultBlackPieces = new ArrayList<>();
         this.orderedBlackPieces = new ArrayList<>();
 
-        this.defaultWhitePieces = new ArrayList<>();
-        this.orderedWhitePieces = new ArrayList<>();
     }
 
     public void initialize() {
         createWhitePieces();
+        setPiecesInLines(board, defaultWhitePieces, 6, 7);
+
         createBlackPieces();
         setPiecesInLines(board, defaultBlackPieces, 0, 1);
-        setPiecesInLines(board, defaultWhitePieces, 6, 7);
     }
-
+    private void setPiecesInLines(Piece[][] board, ArrayList<Piece> pieces, int firstColumn, int secondColumn) {
+        int aux = 0;
+        for(int i = firstColumn; i <= secondColumn; i++) {
+            for(int j = 0; j < 8; j++) {
+                board[i][j] = pieces.get(j + aux);
+            }
+            aux = 8;
+        }
+    }
     private void createWhitePieces() {
         addWhitePawns();
         addWhiteOtherPieces(Rook.createPiece(Piece.Color.white));
@@ -50,7 +60,6 @@ public class Board {
         orderedWhitePieces.add(piece);
         orderStrength(orderedWhitePieces);
     }
-
     private void addWhitePawns() {
         for(int i = 0; i < 8; i++) {
             addWhiteOtherPieces(Pawn.createPiece(Piece.Color.white));
@@ -72,21 +81,19 @@ public class Board {
         orderedBlackPieces.add(piece);
         orderStrength(orderedBlackPieces);
     }
-
     private void addBlackPawns() {
         for(int i = 0; i < 8; i++) {
             addBlackOtherPieces(Pawn.createPiece(Piece.Color.black));
         }
     }
-
     private void orderStrength(ArrayList<Piece> pieces) {
         int aux = pieces.size() - 1;
         Piece piece;
         for(int i = pieces.size() - 2; i >= 0; i--) {
             if(pieces.get(aux).getStrength() > pieces.get(i).getStrength()) {
-                    piece = pieces.get(i);
-                    pieces.set(i, pieces.get(aux));
-                    pieces.set(aux, piece);
+                piece = pieces.get(i);
+                pieces.set(i, pieces.get(aux));
+                pieces.set(aux, piece);
             }
             aux--;
         }
@@ -105,18 +112,7 @@ public class Board {
                 list.append(StringUtil.getNEWLINE());
             }
         }
-        System.out.println(list);
         return list.toString();
-    }
-
-    private void setPiecesInLines(Piece[][] board, ArrayList<Piece> pieces, int firstColumn, int secondColumn) {
-        int aux = 0;
-        for(int i = firstColumn; i <= secondColumn; i++) {
-            for(int j = 0; j < 8; j++) {
-                board[i][j] = pieces.get(j + aux);
-            }
-            aux = 8;
-        }
     }
 
     public Piece[][] getBoard() {
@@ -147,11 +143,24 @@ public class Board {
         return count;
     }
 
-    public char getPieceAtLocation(String location) {
-        int [] aux = getRightLocation(location);
-        return board[aux[0]][aux[1]].getRepresentation();
+    public int[] getPieceLocation(char representation) {
+        int[] aux = new int[2];
+        for(int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                if(board[i][j].getRepresentation() == representation) {
+                    aux[0] = i;
+                    aux[1] = j;
+                    return aux;
+                }
+            }
+        }
+        return aux;
     }
 
+    public Piece getPieceAtLocation(String location) {
+        int [] aux = getRightLocation(location);
+        return board[aux[0]][aux[1]];
+    }
     private int[] getRightLocation(String location) {
         return util.Character.getLocation(location);
     }
@@ -179,12 +188,10 @@ public class Board {
             setBlankPiece(Blank.createPiece(), location);
         }
     }
-
     private void setBlankPiece(Piece piece, String location) {
         int [] aux = getRightLocation(location);
         board[aux[0]][aux[1]] = piece;
     }
-
     private void setBlackPiece(Piece piece, String location) {
         this.defaultBlackPieces.add(piece);
         this.orderedBlackPieces.add(piece);
@@ -194,7 +201,6 @@ public class Board {
                 this.defaultBlackPieces.
                         get(this.defaultBlackPieces.size()-1);
     }
-
     private void setWhitePiece(Piece piece, String location) {
         this.defaultWhitePieces.add(piece);
         this.orderedWhitePieces.add(piece);
@@ -220,7 +226,6 @@ public class Board {
     public double getPiecesStrength(Piece.Color color) {
         return getStrength(color);
     }
-
     private double getStrength(Piece.Color color) {
         double strength = 0;
         for(int i = 0; i < 8; i++) {
@@ -243,48 +248,6 @@ public class Board {
             }
         }
         return false;
-    }
-
-    public int[] getPieceLocation(char representation) {
-        int[] aux = new int[2];
-        for(int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {
-                if(board[i][j].getRepresentation() == representation) {
-                    aux[0] = i;
-                    aux[1] = j;
-                    return aux;
-                }
-            }
-        }
-        return aux;
-    }
-
-    public void moveKing(Piece.Color color, String direction) {
-        int[] aux = new int[2];
-        if(color == Piece.Color.black) {
-            aux = getPieceLocation('K');
-        } else if(color == Piece.Color.white) {
-            aux = getPieceLocation('k');
-        }
-        Piece auxPiece = Blank.createPiece();
-        switch (direction) {
-            case "up":
-                board[aux[0] - 1][aux[1]] = board[aux[0]][aux[1]];
-                board[aux[0]][aux[1]] = auxPiece;
-                break;
-            case "left":
-                board[aux[0]][aux[1] - 1] = board[aux[0]][aux[1]];
-                board[aux[0]][aux[1]] = auxPiece;
-                break;
-            case "down":
-                board[aux[0] + 1][aux[1]] = board[aux[0]][aux[1]];
-                board[aux[0]][aux[1]] = auxPiece;
-                break;
-            case "right":
-                board[aux[0]][aux[1] + 1] = board[aux[0]][aux[1]];
-                board[aux[0]][aux[1]] = auxPiece;
-                break;
-        }
     }
 
 }

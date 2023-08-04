@@ -9,8 +9,8 @@ import util.StringUtil;
  */
 public class BoardTest extends TestCase {
 
-    private final Board board;
-    private Board emptyBoard;
+    public final Board board;
+    public Board emptyBoard;
 
     public BoardTest() {
         board = new Board();
@@ -49,14 +49,14 @@ public class BoardTest extends TestCase {
     }
 
     public void testGetPieceByLocation() {
-        assertEquals('R', board.getPieceAtLocation("a8"));
-        assertEquals('k', board.getPieceAtLocation("e1"));
-        assertEquals('b', board.getPieceAtLocation("f1"));
-        assertEquals('P', board.getPieceAtLocation("c7"));
+        assertEquals('R', board.getPieceAtLocation("a8").getRepresentation());
+        assertEquals('k', board.getPieceAtLocation("e1").getRepresentation());
+        assertEquals('b', board.getPieceAtLocation("f1").getRepresentation());
+        assertEquals('P', board.getPieceAtLocation("c7").getRepresentation());
     }
 
     public void testSetPieceAtLocation() {
-        setPieces();
+        setPieces(emptyBoard);
         String blankRank = StringUtil.appendNewLine("........");
         assertEquals(
                 StringUtil.appendNewLine(".KR.....") +
@@ -71,59 +71,41 @@ public class BoardTest extends TestCase {
         );
     }
 
-    private void setPieces() {
-        emptyBoard.setPieceAtLocation(Piece.Color.black, "king", "b8");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, "rook", "c8");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, "pawn", "a7");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, "pawn", "c7");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, "bishop", "d7");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, "pawn", "b6");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, "queen", "e6");
+    public static void setPieces(Board board) {
+        board.setPieceAtLocation(Piece.Color.black, "king", "b8");
+        board.setPieceAtLocation(Piece.Color.black, "rook", "c8");
+        board.setPieceAtLocation(Piece.Color.black, "pawn", "a7");
+        board.setPieceAtLocation(Piece.Color.black, "pawn", "c7");
+        board.setPieceAtLocation(Piece.Color.black, "bishop", "d7");
+        board.setPieceAtLocation(Piece.Color.black, "pawn", "b6");
+        board.setPieceAtLocation(Piece.Color.black, "queen", "e6");
 
-        emptyBoard.setPieceAtLocation(Piece.Color.white, "knight", "f4");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, "queen", "g4");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, "pawn", "f3");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, "pawn", "h3");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, "pawn", "f2");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, "pawn", "g2");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, "rook", "e1");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, "king", "f1");
+        board.setPieceAtLocation(Piece.Color.white, "knight", "f4");
+        board.setPieceAtLocation(Piece.Color.white, "queen", "g4");
+        board.setPieceAtLocation(Piece.Color.white, "pawn", "f3");
+        board.setPieceAtLocation(Piece.Color.white, "pawn", "h3");
+        board.setPieceAtLocation(Piece.Color.white, "pawn", "f2");
+        board.setPieceAtLocation(Piece.Color.white, "pawn", "g2");
+        board.setPieceAtLocation(Piece.Color.white, "rook", "e1");
+        board.setPieceAtLocation(Piece.Color.white, "king", "f1");
     }
 
     public void testGetPiecesStrength() {
-        setPieces();
+        setPieces(emptyBoard);
         assertEquals(20.0, emptyBoard.getPiecesStrength(Piece.Color.black));
         assertEquals(19.5, emptyBoard.getPiecesStrength(Piece.Color.white));
 
     }
 
     public void testGetOrderPiecesStrength() {
-        setPieces();
+        setPieces(emptyBoard);
         assertEquals("Q\nR\nB\nP\nP\nP\nK\n", emptyBoard.getOrderStrength(Piece.Color.black));
         assertEquals("q\nr\nn\np\np\np\np\nk\n", emptyBoard.getOrderStrength(Piece.Color.white));
 
     }
 
-    public void testMove() {
-        setPieces();
-        emptyBoard.moveKing(Piece.Color.black, "left");
-        String blankRank = StringUtil.appendNewLine("........");
-        assertEquals(
-                StringUtil.appendNewLine("K.R.....") +
-                        StringUtil.appendNewLine("P.PB....") +
-                        StringUtil.appendNewLine(".P..Q...") +
-                        blankRank +
-                        StringUtil.appendNewLine(".....nq.") +
-                        StringUtil.appendNewLine(".....p.p") +
-                        StringUtil.appendNewLine(".....pp.") +
-                        StringUtil.appendNewLine("....rk.."),
-                emptyBoard.print()
-        );
-        emptyBoard.moveKing(Piece.Color.black, "right");
-    }
-
     public void testGetPieceLocation() {
-        setPieces();
+        setPieces(emptyBoard);
         int[] aux = new int[2];
         aux[0] = 4;
         aux[1] = 5;
