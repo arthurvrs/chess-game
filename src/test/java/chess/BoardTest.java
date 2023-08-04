@@ -30,6 +30,7 @@ public class BoardTest extends TestCase {
                         StringUtil.appendNewLine("rnbqkbnr"),
                         board.print()
         );
+        System.out.println(board.print());
     }
 
     public void testCreateEmptyBoard() {
@@ -39,6 +40,7 @@ public class BoardTest extends TestCase {
                         blankRank + blankRank + blankRank + blankRank,
                         emptyBoard.print()
         );
+        System.out.println(emptyBoard.print());
     }
 
     public void testGetNumberOfSpecificsPieces() {
@@ -70,30 +72,28 @@ public class BoardTest extends TestCase {
     }
 
     private void setPieces() {
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.KING, "b8");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.ROOK, "c8");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.PAWN, "a7");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.PAWN, "c7");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.BISHOP, "d7");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.PAWN, "b6");
-        emptyBoard.setPieceAtLocation(Piece.Color.black, Piece.Type.QUEEN, "e6");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, "king", "b8");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, "rook", "c8");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, "pawn", "a7");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, "pawn", "c7");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, "bishop", "d7");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, "pawn", "b6");
+        emptyBoard.setPieceAtLocation(Piece.Color.black, "queen", "e6");
 
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.KNIGHT, "f4");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.QUEEN, "g4");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.PAWN, "f3");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.PAWN, "h3");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.PAWN, "f2");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.PAWN, "g2");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.ROOK, "e1");
-        emptyBoard.setPieceAtLocation(Piece.Color.white, Piece.Type.KING, "f1");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, "knight", "f4");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, "queen", "g4");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, "pawn", "f3");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, "pawn", "h3");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, "pawn", "f2");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, "pawn", "g2");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, "rook", "e1");
+        emptyBoard.setPieceAtLocation(Piece.Color.white, "king", "f1");
     }
 
     public void testGetPiecesStrength() {
         setPieces();
         assertEquals(20.0, emptyBoard.getPiecesStrength(Piece.Color.black));
-        System.out.println(emptyBoard.print());
         assertEquals(19.5, emptyBoard.getPiecesStrength(Piece.Color.white));
-        System.out.println(emptyBoard.print());
 
     }
 

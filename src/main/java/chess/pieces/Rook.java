@@ -1,4 +1,13 @@
 package chess.pieces;
 
-public class Rook {
+public class Rook extends Piece {
+
+    private Rook(Color color) {
+        super(color, 'r');
+        strength = 5.0;
+    }
+
+    public static Piece createPiece(Color color) {
+        return new Rook(color);
+    }
 }

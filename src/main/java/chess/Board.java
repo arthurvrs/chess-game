@@ -1,6 +1,6 @@
 package chess;
 
-import chess.pieces.Piece;
+import chess.pieces.*;
 import util.*;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class Board {
         board = new Piece[8][8];
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
-                board[i][j] = Piece.noPiece();
+                board[i][j] = Blank.createPiece();
             }
         }
         this.defaultBlackPieces = new ArrayList<>();
@@ -27,61 +27,56 @@ public class Board {
         this.orderedWhitePieces = new ArrayList<>();
     }
 
-    private void createPieces(Piece.Color color) {
-        if(color == Piece.Color.white) {
-            addWhitePawns();
-            addWhitePieces(Piece.Type.ROOK);
-            addWhitePieces(Piece.Type.KNIGHT);
-            addWhitePieces(Piece.Type.BISHOP);
-            addWhitePieces(Piece.Type.QUEEN);
-            addWhitePieces(Piece.Type.KING);
-            addWhitePieces(Piece.Type.BISHOP);
-            addWhitePieces(Piece.Type.KNIGHT);
-            addWhitePieces(Piece.Type.ROOK);
-        }
-
-        if(color == Piece.Color.black) {
-            addBlackPieces(Piece.Type.ROOK);
-            addBlackPieces(Piece.Type.KNIGHT);
-            addBlackPieces(Piece.Type.BISHOP);
-            addBlackPieces(Piece.Type.QUEEN);
-            addBlackPieces(Piece.Type.KING);
-            addBlackPieces(Piece.Type.BISHOP);
-            addBlackPieces(Piece.Type.KNIGHT);
-            addBlackPieces(Piece.Type.ROOK);
-            addBlackPawns();
-        }
+    public void initialize() {
+        createWhitePieces();
+        createBlackPieces();
+        setPiecesInLines(board, defaultBlackPieces, 0, 1);
+        setPiecesInLines(board, defaultWhitePieces, 6, 7);
     }
 
-    private void addWhitePieces(Piece.Type type) {
-        defaultWhitePieces.add(Piece.createWhitePiece(type));
-        orderedWhitePieces.add(Piece.createWhitePiece(type));
+    private void createWhitePieces() {
+        addWhitePawns();
+        addWhiteOtherPieces(Rook.createPiece(Piece.Color.white));
+        addWhiteOtherPieces(Knight.createPiece(Piece.Color.white));
+        addWhiteOtherPieces(Bishop.createPiece(Piece.Color.white));
+        addWhiteOtherPieces(Queen.createPiece(Piece.Color.white));
+        addWhiteOtherPieces(King.createPiece(Piece.Color.white));
+        addWhiteOtherPieces(Bishop.createPiece(Piece.Color.white));
+        addWhiteOtherPieces(Knight.createPiece(Piece.Color.white));
+        addWhiteOtherPieces(Rook.createPiece(Piece.Color.white));
+    }
+    private void addWhiteOtherPieces(Piece piece) {
+        defaultWhitePieces.add(piece);
+        orderedWhitePieces.add(piece);
         orderStrength(orderedWhitePieces);
     }
 
     private void addWhitePawns() {
         for(int i = 0; i < 8; i++) {
-            addWhitePieces(Piece.Type.PAWN);
+            addWhiteOtherPieces(Pawn.createPiece(Piece.Color.white));
         }
     }
-
-    private void addBlackPieces(Piece.Type type) {
-        defaultBlackPieces.add(Piece.createBlackPiece(type));
-        orderedBlackPieces.add(Piece.createBlackPiece(type));
+    private void createBlackPieces() {
+        addBlackOtherPieces(Rook.createPiece(Piece.Color.black));
+        addBlackOtherPieces(Knight.createPiece(Piece.Color.black));
+        addBlackOtherPieces(Bishop.createPiece(Piece.Color.black));
+        addBlackOtherPieces(Queen.createPiece(Piece.Color.black));
+        addBlackOtherPieces(King.createPiece(Piece.Color.black));
+        addBlackOtherPieces(Bishop.createPiece(Piece.Color.black));
+        addBlackOtherPieces(Knight.createPiece(Piece.Color.black));
+        addBlackOtherPieces(Rook.createPiece(Piece.Color.black));
+        addBlackPawns();
+    }
+    private void addBlackOtherPieces(Piece piece) {
+        defaultBlackPieces.add(piece);
+        orderedBlackPieces.add(piece);
         orderStrength(orderedBlackPieces);
     }
 
     private void addBlackPawns() {
         for(int i = 0; i < 8; i++) {
-            addBlackPieces(Piece.Type.PAWN);
+            addBlackOtherPieces(Pawn.createPiece(Piece.Color.black));
         }
-    }
-
-    public void initialize() {
-        createPieces(Piece.Color.black);
-        createPieces(Piece.Color.white);
-        setPiecesInLines(board, defaultBlackPieces, 0, 1);
-        setPiecesInLines(board, defaultWhitePieces, 6, 7);
     }
 
     private void orderStrength(ArrayList<Piece> pieces) {
@@ -110,6 +105,7 @@ public class Board {
                 list.append(StringUtil.getNEWLINE());
             }
         }
+        System.out.println(list);
         return list.toString();
     }
 
@@ -160,24 +156,53 @@ public class Board {
         return util.Character.getLocation(location);
     }
 
-    public void setPieceAtLocation(Piece.Color color, Piece.Type type, String location) {
+    public void setPieceAtLocation(Piece.Color color, String type, String location) {
         if(color == Piece.Color.black) {
-            this.defaultBlackPieces.add(Piece.createBlackPiece(type));
-            this.orderedBlackPieces.add(Piece.createBlackPiece(type));
-            orderStrength(orderedBlackPieces);
-            int [] aux = getRightLocation(location);
-            board[aux[0]][aux[1]] =
-                    this.defaultBlackPieces.
-                    get(this.defaultBlackPieces.size()-1);
+            switch (type) {
+                case "pawn" -> setBlackPiece(Pawn.createPiece(color), location);
+                case "rook" -> setBlackPiece(Rook.createPiece(color), location);
+                case "knight" -> setBlackPiece(Knight.createPiece(color), location);
+                case "bishop" -> setBlackPiece(Bishop.createPiece(color), location);
+                case "queen" -> setBlackPiece(Queen.createPiece(color), location);
+                case "king" -> setBlackPiece(King.createPiece(color), location);
+            }
+        } else if(color == Piece.Color.white){
+            switch (type) {
+                case "pawn" -> setWhitePiece(Pawn.createPiece(color), location);
+                case "rook" -> setWhitePiece(Rook.createPiece(color), location);
+                case "knight" -> setWhitePiece(Knight.createPiece(color), location);
+                case "bishop" -> setWhitePiece(Bishop.createPiece(color), location);
+                case "queen" -> setWhitePiece(Queen.createPiece(color), location);
+                case "king" -> setWhitePiece(King.createPiece(color), location);
+            }
         } else {
-            this.defaultWhitePieces.add(Piece.createWhitePiece(type));
-            this.orderedWhitePieces.add(Piece.createWhitePiece(type));
-            orderStrength(orderedWhitePieces);
-            int [] aux = getRightLocation(location);
-            board[aux[0]][aux[1]] =
-                    this.defaultWhitePieces.
-                    get(this.defaultWhitePieces.size()-1);
+            setBlankPiece(Blank.createPiece(), location);
         }
+    }
+
+    private void setBlankPiece(Piece piece, String location) {
+        int [] aux = getRightLocation(location);
+        board[aux[0]][aux[1]] = piece;
+    }
+
+    private void setBlackPiece(Piece piece, String location) {
+        this.defaultBlackPieces.add(piece);
+        this.orderedBlackPieces.add(piece);
+        orderStrength(orderedBlackPieces);
+        int [] aux = getRightLocation(location);
+        board[aux[0]][aux[1]] =
+                this.defaultBlackPieces.
+                        get(this.defaultBlackPieces.size()-1);
+    }
+
+    private void setWhitePiece(Piece piece, String location) {
+        this.defaultWhitePieces.add(piece);
+        this.orderedWhitePieces.add(piece);
+        orderStrength(orderedWhitePieces);
+        int [] aux = getRightLocation(location);
+        board[aux[0]][aux[1]] =
+                this.defaultWhitePieces.
+                        get(this.defaultWhitePieces.size()-1);
     }
 
     public String print() {
@@ -201,7 +226,7 @@ public class Board {
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
                 if(board[i][j].getColor() == color) {
-                    if(board[i][j].getType() == Piece.Type.PAWN && searchPawnInFile(i, j)) {
+                    if(board[i][j].getClass() == Pawn.class && searchPawnInFile(i, j)) {
                         strength -= 1;
                     }
                     strength += board[i][j].getStrength();
@@ -213,7 +238,7 @@ public class Board {
 
     private boolean searchPawnInFile(int rankIndex, int fileIndex) {
         for(int i = rankIndex + 1; i < 8; i++) {
-            if(board[rankIndex][fileIndex].getType() == board[i][fileIndex].getType()) {
+            if(board[rankIndex][fileIndex].getClass() == Pawn.class && board[i][fileIndex].getClass() == Pawn.class) {
                 return true;
             }
         }
@@ -241,7 +266,7 @@ public class Board {
         } else if(color == Piece.Color.white) {
             aux = getPieceLocation('k');
         }
-        Piece auxPiece = Piece.noPiece();
+        Piece auxPiece = Blank.createPiece();
         switch (direction) {
             case "up":
                 board[aux[0] - 1][aux[1]] = board[aux[0]][aux[1]];

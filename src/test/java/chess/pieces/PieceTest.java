@@ -2,60 +2,58 @@ package chess.pieces;
 
 import junit.framework.TestCase;
 
-import static java.lang.Character.toUpperCase;
+import java.util.ArrayList;
 
 /**
  * Classe de testes para os Peões.
  */
 public class PieceTest extends TestCase {
 
+    ArrayList<Piece> pieces = new ArrayList<>();
+
     /**
      * Método para testar a criação de peões.
      */
     public void testCreate() {
-        verifyCreation(
-                Piece.createWhitePiece(Piece.Type.PAWN), Piece.createBlackPiece(Piece.Type.PAWN),
-                Piece.Type.PAWN);
-        verifyCreation(
-                Piece.createWhitePiece(Piece.Type.ROOK), Piece.createBlackPiece(Piece.Type.ROOK),
-                Piece.Type.ROOK);
-        verifyCreation(
-                Piece.createWhitePiece(Piece.Type.KNIGHT), Piece.createBlackPiece(Piece.Type.KNIGHT),
-                Piece.Type.KNIGHT);
-        verifyCreation(
-                Piece.createWhitePiece(Piece.Type.BISHOP), Piece.createBlackPiece(Piece.Type.BISHOP),
-                Piece.Type.BISHOP);
-        verifyCreation(Piece.createWhitePiece(Piece.Type.QUEEN), Piece.createBlackPiece(Piece.Type.QUEEN),
-                Piece.Type.QUEEN);
-        verifyCreation(Piece.createWhitePiece(Piece.Type.KING), Piece.createBlackPiece(Piece.Type.KING),
-                Piece.Type.KING);
-        Piece blank = Piece.noPiece();
-        assertEquals('.', blank.getRepresentation());
-        assertEquals(Piece.Type.NO_PIECE, blank.getType());
+        pieces.add(Blank.createPiece());
+        assertEquals('.', pieces.get(0).getRepresentation());
+        assertEquals(Piece.Color.blank, pieces.get(0).getColor());
+        assertEquals(Blank.class, pieces.get(0).getClass());
+
+        pieces.add(Pawn.createPiece(Piece.Color.black));
+        assertEquals('P', pieces.get(1).getRepresentation());
+        assertEquals(Piece.Color.black, pieces.get(1).getColor());
+        assertEquals(Pawn.class, pieces.get(1).getClass());
+
+        pieces.add(Pawn.createPiece(Piece.Color.white));
+        assertEquals('p', pieces.get(2).getRepresentation());
+        assertEquals(Piece.Color.white, pieces.get(2).getColor());
+        assertEquals(Pawn.class, pieces.get(2).getClass());
+
+        pieces.add(Rook.createPiece(Piece.Color.white));
+        assertEquals('r', pieces.get(3).getRepresentation());
+        assertEquals(Piece.Color.white, pieces.get(3).getColor());
+        assertEquals(Rook.class, pieces.get(3).getClass());
+
+        pieces.add(Knight.createPiece(Piece.Color.black));
+        assertEquals('N', pieces.get(4).getRepresentation());
+        assertEquals(Piece.Color.black, pieces.get(4).getColor());
+        assertEquals(Knight.class, pieces.get(4).getClass());
+
+        pieces.add(Bishop.createPiece(Piece.Color.white));
+        assertEquals('b', pieces.get(5).getRepresentation());
+        assertEquals(Piece.Color.white, pieces.get(5).getColor());
+        assertEquals(Bishop.class, pieces.get(5).getClass());
+
+        pieces.add(Queen.createPiece(Piece.Color.black));
+        assertEquals('Q', pieces.get(6).getRepresentation());
+        assertEquals(Piece.Color.black, pieces.get(6).getColor());
+        assertEquals(Queen.class, pieces.get(6).getClass());
+
+        pieces.add(King.createPiece(Piece.Color.white));
+        assertEquals('k', pieces.get(7).getRepresentation());
+        assertEquals(Piece.Color.white, pieces.get(7).getColor());
+        assertEquals(King.class, pieces.get(7).getClass());
+
     }
-
-    private void verifyCreation(Piece whitePiece, Piece blackPiece, Piece.Type type) {
-        assertTrue(whitePiece.isWhite());
-        assertEquals(type, whitePiece.getType());
-        assertEquals(type.getRepresentation(), whitePiece.getRepresentation());
-
-        assertTrue(blackPiece.isBlack());
-        assertEquals(type, blackPiece.getType());
-        assertEquals(toUpperCase(type.getRepresentation()), blackPiece.getRepresentation());
-
-    }
-
-    public void testGetStrengh() {
-        Piece blackQueen = Piece.createBlackPiece(Piece.Type.QUEEN);
-        assertEquals(9.0, blackQueen.getStrength());
-        Piece whiteBishop = Piece.createWhitePiece(Piece.Type.BISHOP);
-        assertEquals(3.0, whiteBishop.getStrength());
-        Piece blackPawn = Piece.createBlackPiece(Piece.Type.PAWN);
-        assertEquals(1.0, blackPawn.getStrength());
-        Piece whiteKnight = Piece.createWhitePiece(Piece.Type.KNIGHT);
-        assertEquals(2.5, whiteKnight.getStrength());
-        Piece whiteRook = Piece.createWhitePiece(Piece.Type.ROOK);
-        assertEquals(5.0, whiteRook.getStrength());
-    }
-
 }
