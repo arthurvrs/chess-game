@@ -36,6 +36,12 @@ public class GameTest extends TestCase {
                         StringUtil.appendNewLine("....rk.."),
                 game.getBoard().print()
         );
-        game.moveKing(Piece.Color.black, "right");
     }
+
+    /*public void testKingMoveNotOnEdge() {
+        Piece piece = Piece.createBlackKing();
+        board.put("d3", piece);
+        assertContains(piece.getPossibleMoves("d3", board),
+                "c4", "d4", "e4", "c3", "e3", "c2", "d2", "e2");
+    }*/
 }
