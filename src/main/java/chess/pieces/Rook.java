@@ -13,7 +13,11 @@ public class Rook extends Piece {
 
     @Override
     public boolean getPossibleMoves(Movement movement) {
-        return true;
+        return
+                movement == Movement.up ||
+                movement == Movement.left ||
+                movement == Movement.down ||
+                movement == Movement.right;
     }
 
     @Override

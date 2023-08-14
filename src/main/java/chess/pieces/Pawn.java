@@ -17,13 +17,17 @@ public class Pawn extends Piece {
 
     @Override
     public boolean getPossibleMoves(Movement movement) {
+        if(color == Color.black) {
+            return
+                    movement == Movement.down ||
+                    movement == Movement.downLeft ||
+                    movement == Movement.downRight;
+        }
+
         return
                 movement == Movement.up ||
                 movement == Movement.upLeft ||
-                movement == Movement.upRight ||
-                movement == Movement.down ||
-                movement == Movement.downLeft ||
-                movement == Movement.downRight;
+                movement == Movement.upRight;
     }
 
     @Override

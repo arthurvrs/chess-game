@@ -13,7 +13,11 @@ public class Bishop extends Piece {
 
     @Override
     public boolean getPossibleMoves(Movement movement) {
-        return true;
+        return
+                movement == Movement.upLeft ||
+                movement == Movement.downLeft ||
+                movement == Movement.downRight ||
+                movement == Movement.upRight;
     }
 
     @Override
