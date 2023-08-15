@@ -18,6 +18,7 @@ public class Board {
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
                 board[i][j] = Blank.createPiece();
+                board[i][j].setLocation(new int[]{i, j});
             }
         }
         this.defaultWhitePieces = new ArrayList<>();
@@ -40,6 +41,7 @@ public class Board {
         for(int i = firstColumn; i <= secondColumn; i++) {
             for(int j = 0; j < 8; j++) {
                 board[i][j] = pieces.get(j + aux);
+                board[i][j].setLocation(new int[]{i, j});
             }
             aux = 8;
         }
@@ -191,6 +193,7 @@ public class Board {
     private void setBlankPiece(Piece piece, String location) {
         int [] aux = getRightLocation(location);
         board[aux[0]][aux[1]] = piece;
+        board[aux[0]][aux[1]].setLocation(new int[]{aux[0], aux[1]});
     }
     private void setBlackPiece(Piece piece, String location) {
         this.defaultBlackPieces.add(piece);
@@ -200,6 +203,7 @@ public class Board {
         board[aux[0]][aux[1]] =
                 this.defaultBlackPieces.
                         get(this.defaultBlackPieces.size()-1);
+        board[aux[0]][aux[1]].setLocation(new int[]{aux[0], aux[1]});
     }
     private void setWhitePiece(Piece piece, String location) {
         this.defaultWhitePieces.add(piece);
@@ -209,6 +213,7 @@ public class Board {
         board[aux[0]][aux[1]] =
                 this.defaultWhitePieces.
                         get(this.defaultWhitePieces.size()-1);
+        board[aux[0]][aux[1]].setLocation(new int[]{aux[0], aux[1]});
     }
 
     public String print() {

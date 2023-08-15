@@ -1,8 +1,7 @@
 package chess.pieces;
 
-import java.util.*;
-
 import static java.lang.Character.toUpperCase;
+import util.Character;
 
 public abstract class Piece {
 
@@ -10,6 +9,7 @@ public abstract class Piece {
     protected final Color color;
     protected char representation;
     protected double strength;
+    protected String location;
     public enum Movement {
         up, left, down, right,
         upLeft, upRight, downLeft, downRight,
@@ -52,4 +52,12 @@ public abstract class Piece {
     public abstract boolean getPossibleMoves(Movement movement);
 
     public abstract int getNumberOfMoves();
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(int[] location) {
+        this.location = Character.getLocation(location);
+    }
 }

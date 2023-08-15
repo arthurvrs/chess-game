@@ -11,10 +11,6 @@ public class Pawn extends Piece {
         return new Pawn(color);
     }
 
-    public void deprecatePawn() {
-        strength -= 0.5;
-    }
-
     @Override
     public boolean getPossibleMoves(Movement movement) {
         if(color == Color.black) {
