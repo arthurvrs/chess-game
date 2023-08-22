@@ -1,6 +1,7 @@
 import chess.BoardTest;
 import chess.GameTest;
 import chess.pieces.*;
+import exercises.*;
 import junit.framework.TestSuite;
 import util.*;
 
@@ -22,6 +23,9 @@ public class AllTests {
         suite.addTestSuite(QueenTest.class);
         suite.addTestSuite(KingTest.class);
 
+        //Exercises
+        suite.addTestSuite(Chapter6Test.class);
+        suite.addTestSuite(Chapter8Test.class);
         return suite;
     }
 }
