@@ -2,15 +2,15 @@ package exercises;
 
 public class Chapter8 {
 
-    public static void blowsUp() throws RuntimeException {
-        throw new RuntimeException();
+    public static void blowsUp() {
+        throw new SimpleException();
     }
 
     public static void rethrows() throws RuntimeException {
         try {
             blowsUp();
         } catch(RuntimeException e) {
-            e.getCause();
+            throw new RuntimeException(e);
         }
     }
 }

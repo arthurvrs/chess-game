@@ -13,8 +13,23 @@ public class Chapter8Test extends TestCase {
         }
     }
 
-    public void testRethrows() throws RuntimeException {
-        Chapter8.rethrows();
+    public void testRethrows() {
+        try {
+            Chapter8.rethrows();
+        } catch(Exception e) {
+            assertEquals(SimpleException.class, e.getCause().getClass());
+        }
+    }
+
+    public void testWithProblems() {
+        try {
+            doSomething();
+            fail("no exception");
+        }
+        catch (Exception success) {}
+    }
+    void doSomething() throws Exception {
+        throw new Exception("blah");
     }
 
 }
