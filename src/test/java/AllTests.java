@@ -26,6 +26,7 @@ public class AllTests {
         //Exercises
         suite.addTestSuite(Chapter6Test.class);
         suite.addTestSuite(Chapter8Test.class);
+        suite.addTestSuite(Chapter9Test.class);
         return suite;
     }
 }
